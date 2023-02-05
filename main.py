@@ -1,8 +1,11 @@
 from flask import Flask, render_template
+import pandas as pd
 
 app = Flask(__name__)
+df = pd.read_csv("dictionary.csv")
 
 
+#
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -10,10 +13,10 @@ def home():
 
 @app.route('/api/v1/<word>/')
 def api(word):
-    definition = word.upper()
+    definition = df.loc[df["word"] == word]["definition"].squeeze()
     result_dictionary = {
         "word": word,
-        "description": definition
+        "definition": definition
     }
     return result_dictionary
 
@@ -21,4 +24,4 @@ def api(word):
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
 
-page = "http://127.0.0.1:5001/api/v1/flower"
+page = "http://127.0.0.1:5001/api/v1/sun"
